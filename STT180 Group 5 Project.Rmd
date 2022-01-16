@@ -1,0 +1,66 @@
+---
+title: "STT180 Group 5 Project"
+author: "Samuel Zhang"
+date: "11/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE)
+
+library(tidyverse)
+library(broom)
+library(infer)
+```
+
+
+```{r}
+cfb19 <- read.csv("cfb19.csv")
+glimpse(cfb19)
+unique(cfb19$Team)
+```
+
+```{r}
+#Separating variable Team into Team and Conference.
+cfbx <- cfb19%>%
+  separate(Team, into=c("Team","Conference"),sep="\\(")%>%
+  separate(Conference,into=c("Conference","H"),sep="\\)")%>%
+  subset(select=-H)
+cfbx
+cfby <- cfbx%>%
+  filter(Conference!="OH"&Conference!="FL")
+
+#relationship between total points and win in each conference.
+cfby%>%
+  group_by(Conference)%>%
+  ggplot(aes(Total.Points,Win))+
+  geom_point(aes(color=Conference))+
+  facet_wrap("Conference",nrow=5)+
+  labs(x="Total points scored",y="Number of Wins",title="Relationship between total points and wins in each conference")
+
+#Every conference has a positive linear relationship between points and wins except Mountain West conference. There is a team in Mountain West only scored around 300 points but able to win 10 games.
+```
+
+```{r}
+#Finding out the team in Mountain West
+cfby%>%
+  filter(Conference=="Mountain West"&Win==10&Total.Points<300)
+#Find out the team scored the most points and won the most games
+cfby%>%
+  filter(Win==15)
+```
+
+```{r}
+#The relationship between time of possession and wins in each conference.
+cfby%>%
+  group_by(Conference)%>%
+  ggplot(aes(Time.of.Possession,Win))+
+  geom_point(aes(color=Conference))+
+  facet_wrap("Conference",nrow=5)+
+  labs(x="Time of possession",y="Number of Wins",title="Relationship between time of possession and wins in each conference")
+
+
+#The graphs show that the team win the most of games have strongest time of possession.
+```
+

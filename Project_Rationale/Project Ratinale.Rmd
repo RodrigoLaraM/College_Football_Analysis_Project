@@ -1,0 +1,66 @@
+---
+title: "Project Rationale"
+author: "Group 5"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: false
+    df_print: paged  
+---
+
+<style type="text/css">
+/* Title */
+h1.title {
+  color: #262626;
+  font-size:40px;
+  font-weight: bold;
+}
+/* Level 1 header */
+h1 {
+  color: #71C144;
+}
+/* Level 2 header */
+h2 {
+  color: #FF664D;
+}
+/* Table of contents */
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #71C144;
+    border-color: #337ab7;
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      comment = NA)
+set.seed(2738952)
+```
+
+# Rationale and Plan
+
+## Questions
+  1. Motivating questions that you will try to address in the project.
+  2. What do you expect to learn?
+  3. What methods do you plan to use to achieve your goal?
+  4. Do you see any potential issues that could affect your ability to address the questions?
+  5. What is your group’s plan to facilitate working collaboratively on the project?
+
+
+Can we correlate divisions or regions with offensive and/or defensive ranks? Can we observe if defense matters more than offense when it comes to winning (“defense wins championships'')? Do conservative teams that kick more field goals in the redzone (instead of going for the touchdown) tend to lose more? Which divisions score more (Big Ten vs. SEC vs. etc.)? Can we correlate the amount of points scored to weather? What about rush attempts (or yards) vs pass attempts (or yards) according to region of the country (colder regions may run the ball more)? Can we observe how the turnover margin of several teams affects winning?
+
+We expect to learn about how testing and experimenting with different variables of college football can lead to interesting statistics that may otherwise not have been obvious.
+
+The methods in which we plan to use involve a lot of wrangling and tidying of data, and then using that data to illustrate our point using plots. This will largely be done using packages such as tidyverse, but more specifically, dplyr and ggplot2.
+
+Some potential issues that could affect our ability to address our questions involve a lack of experience in coding with R, lack of data or data that isn’t exactly what we need, or some questions may be too ambitious.
+
+Our group’s plan to facilitate working collaboratively on the project is to host meetings via Zoom, or meet in-person. These meetings will be once a week. It’s difficult to do individual work on the project because our work isn’t automatically shared with each other, unless we constantly send each other our updated version of the Rmd for the project.
+
+
+
+

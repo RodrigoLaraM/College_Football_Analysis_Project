@@ -1,0 +1,117 @@
+---
+title: "Project_Testing"
+author: "Steven Orbain"
+date: "11/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE)
+
+library(tidyverse)
+library(broom)
+library(infer)
+```
+
+```{r}
+cfb <- read.csv("cfb19.csv")
+cfb <- as_tibble(cfb)
+
+glimpse(cfb)
+```
+
+#I am observing how aspects of the offensive side of the ball is related to winning games.
+
+If you are planning to study relationship, it will be a good idea to complement graphical representation with numerical analysis (summary stats, correlation, regression?)
+
+##All should relate to winning percentage. What makes a winning football team?
+
+```{r Wins}
+cfb %>%
+  ggplot(aes(x=Win)) +
+  geom_histogram(binwidth=1,
+                 color="green",
+                 fill="blue") + 
+  labs(x="Wins",
+       y="Count",
+       title="Wins (CFB, 2019)")
+
+```
+
+```{r Off.Yards}
+cfb %>%
+  ggplot(aes(x=Win, y=Off.Yards)) +
+  geom_boxplot(aes(as.factor(Win)),
+               fill="orange",
+               color="black") + 
+  labs(x="Wins",
+       y="Offensive Yards",
+       title="Offensive Yards by Wins (CFB, 2019)")
+
+```
+
+```{r Off.TDs}
+cfb %>%
+  ggplot(aes(x=Win, y=Off.TDs)) +
+  geom_point(aes(color=as.factor(Win))) + 
+  geom_jitter(aes(color=as.factor(Win))) +
+  stat_smooth(method="lm") +
+  labs(x="Wins",
+       y="Offensive Touchdowns",
+       title="Offensive Touchdowns in Relation to Wins (CFB, 2019)") +
+  scale_color_discrete(name="Wins",
+                       labels=seq(0,15,1))
+```
+
+```{r Off.Rank}
+cfb %>%
+  ggplot(aes(x=Win, y=Off.Rank)) +
+  geom_point(color="purple") + 
+  scale_y_reverse() + 
+  stat_smooth(method="lm") +
+  labs(x="Wins",
+       y="Offensive Rank",
+       title="Offensive Rank in Relation to Wins (CFB, 2019)")
+```
+
+```{r Reg.Model}
+m.cfb <- lm(Win ~ Off.Yards + Off.TDs + Off.Rank + Off.Plays +
+              First.Downs + Scoring.Off.Rank + Turnover.Margin, data = cfb)
+m.cfb %>%
+  broom::tidy()
+
+
+best.model.cfb <- step(object=m.cfb, direction="backward", trace=F)
+best.model.cfb %>%
+  broom::tidy()
+
+
+best.model.cfb %>%
+  broom::glance()
+
+
+test <- tibble(Off.Yards=6000,
+               Off.TDs=50,
+               Off.Rank=35,
+               Off.Plays=850,
+               First.Downs=240,
+               Scoring.Off.Rank=40,
+               Turnover.Margin=4)
+predict(best.model.cfb, newdata=test, interval="prediction", level=0.95)
+
+
+#best.model.cfb %>%
+#  broom::confint_tidy(conf.level = 0.95)
+
+resid.mod <- best.model.cfb %>%
+  broom::augment()
+
+resid.mod %>%
+  ggplot(aes(x=Win, y=.resid)) + 
+  geom_point() +
+  geom_hline(yintercept=0,
+             color='red') +
+  labs(y='Residuals',
+       x='Wins')
+```

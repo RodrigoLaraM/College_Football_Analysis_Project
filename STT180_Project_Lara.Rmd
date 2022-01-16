@@ -1,0 +1,72 @@
+---
+title: "STT180_Project_Lara"
+author: "Rodrigo Lara"
+date: "11/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE)
+
+library(tidyverse)
+library(broom)
+library(infer)
+```
+
+```{r}
+cfb <- read.csv("cfb19.csv")
+cfb <- as_tibble(cfb)
+
+glimpse(cfb)
+```
+
+# Special Teams
+
+Special Teams is the term used for the team formation used for kickoff plays, it consists of offense and defense players just for that single play, after that the team gets changed to its respective side, either defense or offense.
+To answer the question “if special teams plays are a big factor to win games” we will go ahead and read our data for special teams. We will analyze and plot the Kickoff Return Rank data and the Kickoff Return Touchdowns. 
+
+## Kickoff Return Rank
+
+The Kickoff Return Rank represents the overall performance of a team during this plays, it compresses Kickoff Return total Yards in the season, the Kickoff Return avg yards per game, and the Kickoff Return Touchdowns in the season into a single number, when reading and plotting the data we found out that overall performance of special teams during Kickoff Return plays is really beneficial on winning games, it show that good performance during this plays will increase your probability on winning.
+
+```{r}
+cfb %>%
+  ggplot(aes(x=Win, y=Kickoffs.Returned)) +
+  geom_point() + 
+  stat_smooth(method="lm") +
+  labs(x="Wins",
+       y="Kickoff Return Rank",
+       title="Kickoff Return Rank by wins")
+```
+
+## Kickoff Return Touchdowns
+
+I wanted to go in depth and see if achieving a miraculous touchdown during this plays will increase your chances of winning so I went ahead and analyzed and plotted the data for Kickoff Return Touchdowns and from what we can see from the boxplot graph is that achieving a touchdown won’t really have that much of an impact on winning probability we can see that there are more teams without achieving a Kickoff Return Touchdown with the same amount of wins than those who did achieve 1 or 2 kickoff return touchdowns on the season. Also, the team with the most wins didn’t achieve a kickoff return touchdown on the season.
+
+```{r}
+cfb %>%
+  ggplot(aes(x=Avg.Yard.per.Kickoff.Return, y=Win)) +
+  geom_boxplot(aes(as.factor(Avg.Yard.per.Kickoff.Return)),
+               fill="blue",
+               color="black") + 
+  labs(x="Kickoff Return Touchdowns",
+       y="Wins",
+       title="Returned Kickoff Touchdowns")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
